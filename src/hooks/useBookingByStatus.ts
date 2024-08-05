@@ -7,13 +7,16 @@ import {
   getDocs
 } from 'firebase/firestore';
 import { Booking } from '../types/Booking';
+import { useIsFocused } from '@react-navigation/native';
 
 const useBookingsByStatus = (userId: string, status: string) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
+    if (!isFocused) return;
     const fetchBookings = async () => {
       const db = getFirestore();
       try {
@@ -37,7 +40,7 @@ const useBookingsByStatus = (userId: string, status: string) => {
     };
 
     fetchBookings();
-  }, [userId, status]);
+  }, [userId, status, isFocused]);
 
   return { bookings, loading, error };
 };

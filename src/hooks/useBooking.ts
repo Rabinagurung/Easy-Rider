@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { fetchBookingById } from '../api/firestore/bookings';
 import { Booking } from '../types/Booking';
+import { useIsFocused } from '@react-navigation/native';
 
 const useBooking = (bookingId: string | null) => {
   const [booking, setBooking] = useState<Booking | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
+    if (!isFocused) return;
     if (!bookingId) {
       setBooking(null);
       setIsLoading(false);
@@ -27,7 +30,7 @@ const useBooking = (bookingId: string | null) => {
     };
 
     fetchBooking();
-  }, [bookingId]);
+  }, [bookingId, isFocused]);
 
   return { booking, isLoading, error };
 };
